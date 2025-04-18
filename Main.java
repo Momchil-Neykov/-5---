@@ -30,6 +30,18 @@ public class Main {
         return "g" + nextGrammarId++;
     }
 
+    public static Grammar getGrammar(String id) {
+        return grammars.get(id);
+    }
+
+    public static void addGrammar(Grammar grammar) {
+        grammars.put(grammar.getId(), grammar);
+    }
+
+    public static Collection<Grammar> getAllGrammars() {
+        return grammars.values();
+    }
+
     public static void main(String[] args) {
         initializeCommands();
         Scanner scanner = new Scanner(System.in);
@@ -77,18 +89,5 @@ public class Main {
         for (Command cmd : sortedCommands) {
             System.out.printf("%-15s - %s%n", cmd.getName(), cmd.getDescription());
         }
-    }
-
-    // Utility methods for commands to use
-    public static Grammar getGrammar(String id) {
-        return grammars.get(id);
-    }
-
-    public static void addGrammar(Grammar grammar) {
-        grammars.put(grammar.getId(), grammar);
-    }
-
-    public static Collection<Grammar> getAllGrammars() {
-        return grammars.values();
     }
 } 
