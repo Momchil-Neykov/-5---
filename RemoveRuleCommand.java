@@ -1,17 +1,25 @@
-public class RemoveRuleCommand extends Command {
+public class RemoveRuleCommand extends BaseCommand {
     public RemoveRuleCommand() {
-        super("removeRule", "Премахване на правило по пореден номер");
+        super("Премахване на правило по пореден номер");
     }
 
     @Override
     public void execute(String[] args) {
-        if (args.length < 2) {
-            System.out.println("Usage: removeRule <id> <ruleNumber>");
+        validateArgs(args, 2, "removeRule <id> <ruleNumber>");
+        String id = args[0];
+        int ruleNumber;
+        try {
+            ruleNumber = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            System.out.println("Грешен номер на правило!");
             return;
         }
-        String grammarId = args[0];
-        int ruleNumber = Integer.parseInt(args[1]);
-        // TODO: Implement removing rule from grammar
-        System.out.println("Removing rule #" + ruleNumber + " from grammar " + grammarId);
+        Grammar grammar = getGrammar(id);
+        if (ruleNumber < 1 || ruleNumber > grammar.getProductions().size()) {
+            System.out.println("Невалиден номер на правило!");
+            return;
+        }
+        grammar.getProductions().remove(ruleNumber - 1);
+        System.out.println("Правилото с номер " + ruleNumber + " беше премахнато от граматика " + id);
     }
 } 

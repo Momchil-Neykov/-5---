@@ -5,7 +5,15 @@ public class Production {
 
     public Production(char leftSide, String rightSide) {
         if (!Character.isUpperCase(leftSide)) {
-            throw new IllegalArgumentException("Left side must be an uppercase letter (non-terminal)");
+            throw new IllegalArgumentException("Лявата страна трябва да е главна латинска буква (нетерминал)");
+        }
+        if (rightSide == null || rightSide.isEmpty()) {
+            throw new IllegalArgumentException("Дясната страна не може да е празна");
+        }
+        for (char c : rightSide.toCharArray()) {
+            if (!Character.isLetterOrDigit(c)) {
+                throw new IllegalArgumentException("Дясната страна трябва да съдържа само букви или цифри (терминали или нетерминали)");
+            }
         }
         this.leftSide = leftSide;
         this.rightSide = rightSide;

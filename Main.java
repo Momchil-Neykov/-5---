@@ -2,28 +2,26 @@ import java.util.*;
 
 public class Main {
     private static Map<String, Grammar> grammars = new HashMap<>();
-    private static Map<String, Command> commands = new HashMap<>();
+    private static Map<CommandType, Command> commands = new EnumMap<>(CommandType.class);
     private static int nextGrammarId = 1;
 
     private static void initializeCommands() {
-        Command[] commandList = {
-            new ListCommand(),
-            new PrintCommand(),
-            new SaveCommand(),
-            new AddRuleCommand(),
-            new RemoveRuleCommand(),
-            new UnionCommand(),
-            new ConcatCommand(),
-            new ChomskyCommand(),
-            new CykCommand(),
-            new IterCommand(),
-            new EmptyCommand(),
-            new ChomsifyCommand()
-        };
-
-        for (Command cmd : commandList) {
-            commands.put(cmd.getName(), cmd);
-        }
+        commands.put(CommandType.LIST, new ListCommand());
+        commands.put(CommandType.PRINT, new PrintCommand());
+        commands.put(CommandType.SAVE, new SaveCommand());
+        commands.put(CommandType.ADD_RULE, new AddRuleCommand());
+        commands.put(CommandType.REMOVE_RULE, new RemoveRuleCommand());
+        commands.put(CommandType.UNION, new UnionCommand());
+        commands.put(CommandType.CONCAT, new ConcatCommand());
+        commands.put(CommandType.CHOMSKY, new ChomskyCommand());
+        commands.put(CommandType.CYK, new CykCommand());
+        commands.put(CommandType.ITER, new IterCommand());
+        commands.put(CommandType.EMPTY, new EmptyCommand());
+        commands.put(CommandType.CHOMSKIFY, new ChomsifyCommand());
+        commands.put(CommandType.OPEN, new OpenCommand());
+        commands.put(CommandType.CLOSE, new CloseCommand());
+        commands.put(CommandType.SAVEAS, new SaveAsCommand());
+        commands.put(CommandType.NEWGRAMMAR, new NewGrammarCommand());
     }
 
     private static String generateNextGrammarId() {
@@ -40,6 +38,10 @@ public class Main {
 
     public static Collection<Grammar> getAllGrammars() {
         return grammars.values();
+    }
+
+    public static void removeGrammar(String id) {
+        grammars.remove(id);
     }
 
     public static void main(String[] args) {
@@ -65,13 +67,14 @@ public class Main {
             String commandName = parts[0].toLowerCase();
             String[] commandArgs = Arrays.copyOfRange(parts, 1, parts.length);
 
-            Command command = commands.get(commandName);
-            if (command == null) {
+            CommandType commandType = CommandType.fromName(commandName);
+            if (commandType == null) {
                 System.out.println("Непозната команда: " + commandName);
                 continue;
             }
 
             try {
+                Command command = commands.get(commandType);
                 command.execute(commandArgs);
             } catch (Exception e) {
                 System.out.println("Грешка при изпълнение на командата: " + e.getMessage());
@@ -83,11 +86,9 @@ public class Main {
 
     private static void printHelp() {
         System.out.println("Налични команди:");
-        List<Command> sortedCommands = new ArrayList<>(commands.values());
-        sortedCommands.sort(Comparator.comparing(Command::getName));
-        
-        for (Command cmd : sortedCommands) {
-            System.out.printf("%-15s - %s%n", cmd.getName(), cmd.getDescription());
+        for (CommandType type : CommandType.values()) {
+            Command command = commands.get(type);
+            System.out.printf("%-15s - %s%n", type.getName(), command.getDescription());
         }
     }
 } 

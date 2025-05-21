@@ -4,14 +4,13 @@ public class Grammar {
     private String id;
     private Set<Character> nonTerminals;  // Главни латински букви
     private Set<Character> terminals;     // Малки латински букви и цифри
-    private List<Production> productions;
+    private List<Production> productions = new ArrayList<>();
     private char startSymbol;
 
     public Grammar(String id) {
         this.id = id;
         this.nonTerminals = new HashSet<>();
         this.terminals = new HashSet<>();
-        this.productions = new ArrayList<>();
     }
 
     public String getId() {
@@ -28,6 +27,9 @@ public class Grammar {
                 terminals.add(c);
             }
         }
+        if (startSymbol == '\0') {
+            startSymbol = production.getLeftSide();
+        }
     }
 
     public void setStartSymbol(char startSymbol) {
@@ -35,7 +37,7 @@ public class Grammar {
     }
 
     public List<Production> getProductions() {
-        return new ArrayList<>(productions);
+        return productions;
     }
 
     public Set<Character> getNonTerminals() {

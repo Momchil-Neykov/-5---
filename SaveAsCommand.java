@@ -1,16 +1,16 @@
 import java.io.*;
 
-public class SaveCommand extends BaseCommand {
-    public SaveCommand() {
-        super("Записва граматиката във файл");
+public class SaveAsCommand extends BaseCommand {
+    public SaveAsCommand() {
+        super("Записва граматиката във файл с ново име");
     }
 
     @Override
     public void execute(String[] args) {
-        validateArgs(args, 1, "save <id>");
+        validateArgs(args, 2, "saveas <id> <filename>");
         String id = args[0];
+        String filename = args[1];
         Grammar grammar = getGrammar(id);
-        String filename = id + ".txt";
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             for (Production p : grammar.getProductions()) {
                 writer.println(p.getLeftSide() + " -> " + p.getRightSide());
